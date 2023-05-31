@@ -10,11 +10,22 @@
 (def urlsearch
   "https://www.alphavantage.co/query?function=SYMBOL_SEARCH")
 
+(def urldetalhes
+  ": https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED")
+
 ;; (http-client/get urlsearch {:query-params {"keywords" "PETR" "apikey" chave}})
 
 
+
 (defn obter-acoes [filtro]
-  (-> (:body (http-client/get urlsearch
+  (map (fn [x] ( (get x "1. symbol"))) (-> (:body (http-client/get urlsearch
                                {:query-params {"keywords" filtro "apikey" chave}}))
       (parse-string)
-      (get-in	["bestMatches"])))
+      (get-in ["bestMatches"]))))
+
+
+(defn detalhar-acao [symbol]
+  (-> (:body (http-client/get urlsearch
+                              {:query-params {"symbol" symbol "apikey" chave}}))
+      (parse-string)
+      (get-in ["bestMatches"])))
