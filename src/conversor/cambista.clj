@@ -12,6 +12,9 @@
 (def urldetalhes
   ": https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED")
 
+(def urldescricao
+  "https://www.alphavantage.co/query?function=OVERVIEW")
+
 (defn filtro_symbol [acao]
   (get-in acao ["1. symbol"]))
 
@@ -25,9 +28,14 @@
       (get-in ["bestMatches"])
       (formata_acoes_alpha)))
 
+(defn obter-descricao [symbol]
+  (-> (:body (http-client/get urldescricao
+                              {:query-params {"symbol" (str symbol ".sao") "apikey" chave}}))
+      (parse-string)))
+
 (defn detalhar-acao-alpha [symbol]
   (-> (:body (http-client/get urlsearch
-                              {:query-params {"symbol" symbol "apikey" chave}}))))
+                              {:query-params {"symbol" (str symbol ".sao") "apikey" chave}}))))
 
 
 
@@ -40,18 +48,22 @@
   "https://brapi.dev/api/quote/")
 
 (defn filtro_name [acao]
-  (str "Symbol: " (get-in acao ["stock"]) " Name: " (get-in acao ["name"])))
+  (str "Symbol: " (get-in acao ["stock"]) " Name: " (get-in acao ["name"]) "/n"))
 
-(defn formata_acoes_brapi [ data ]
+(defn formata_lista_brapi [ data ]
   (map filtro_name data))
 
 (defn obter-acoes-brapi []
   (-> (:body (http-client/get urllista))
       (parse-string)
       (get-in ["stocks"])
-      (formata_acoes_brapi)))
+      (formata_lista_brapi)))
 
+
+(defn formata_acoes_brapi [ data ]
+  (str "Nome: " (get-in data ["longName"])))
 (defn detalhar-acao-brapi [symbol]
   (-> (:body (http-client/get (str urlticket symbol)))
       (parse-string)
-      (get-in ["results"])))
+      (get-in ["results"])
+      ))
