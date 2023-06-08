@@ -38,7 +38,6 @@
                               {:query-params {"symbol" (str symbol ".sao") "apikey" chave}}))))
 
 
-
 ; Brapi
 
 (def urllista
@@ -68,3 +67,17 @@
       (parse-string)
       (get-in ["results"])
       ))
+
+
+
+;; API Carteira de Acoes
+
+(def listaTransacoesUrl "http://localhost:3000/aplicacoes")
+
+(defn formata_lista_aplicacoes [lista]
+  (map println (map #(format "Symbol: %s Name: %s\n" (get-in % ["stock"]) (get-in % ["name"])) lista)))
+(defn get_aplicacoes []
+  (->
+    (:body (http-client/get listaTransacoesUrl))
+    (formata_lista_aplicacoes)
+    (prn)))
