@@ -5,21 +5,9 @@
                                         obter-acoes-brapi detalhar-acao-brapi
                                         obter-descricao]]))
 
-
 ;(defn -main
 ;  [& args]
-;  (let [{de :de para :para} (interpretar-opcoes args)]
-;    (-> (cotar de para)
-;         (formatar de para)
-;         (prn))))
-
-
-;(defn -main
-;  [& args]
-;  (let [{filtro :filtro} (interpretar-opcoes args)]
-;    (->
-;      (obter-acoes-brapi)
-;      (prn))))
+;    (println  (obter-acoes-brapi)))
 
 (defn -main
   [& args]
@@ -27,3 +15,4 @@
     (println (formata-detalhes
       (detalhar-acao-brapi filtro)
       (obter-descricao filtro)))))
+

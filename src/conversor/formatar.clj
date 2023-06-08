@@ -11,7 +11,13 @@
     (- (get-in data ["regularMarketPreviousClose"]) (get-in data ["regularMarketOpen"]))
     (get-in data ["regularMarketPreviousClose"]))))
 
+(defn filtrar-tipo [resposta]
+  (let [tipo-ativo (re-find #"PN|ON" resposta)]
+    (when tipo-ativo tipo-ativo) ))
 
+(defn valida-descricao [descricao]
+  (if (= descricao "{}")
+    "O ativo não tem descrição" descricao))
 
 (defn formata-detalhes [data-brapi descricao]
   (let [data (get data-brapi 0)]
@@ -19,8 +25,8 @@
       "Nome: %s\nCodigo: %s\nTipo de ativo: %s\nDescricao: %s\nVariacao do dia: %.2f\nVariacao do dia em percentual: %.2f\nUltimo Preco: %f\nPreco Maximo: %f\nPreco Minimo: %f\nPreco de Abertura: %f\nPreco de fechamento: %f\nHora: %s"
       (get-in data ["longName"])
       (get-in data ["symbol"])
-      (get-in data ["shortName"])
-      descricao
+      (filtrar-tipo (get-in data ["shortName"]))
+      (valida-descricao descricao)
       (extrai-Variacao data)
       (extrai-Variacao-percent data)
       (float (get-in data ["regularMarketPrice"]))

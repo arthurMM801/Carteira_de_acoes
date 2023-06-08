@@ -31,7 +31,7 @@
 (defn obter-descricao [symbol]
   (-> (:body (http-client/get urldescricao
                               {:query-params {"symbol" (str symbol ".sao") "apikey" chave}}))
-      (parse-string)))
+      ))
 
 (defn detalhar-acao-alpha [symbol]
   (-> (:body (http-client/get urlsearch
@@ -48,7 +48,7 @@
   "https://brapi.dev/api/quote/")
 
 (defn filtro_name [acao]
-  (str "Symbol: " (get-in acao ["stock"]) " Name: " (get-in acao ["name"]) "/n"))
+  (str (format "Symbol: %s Name: %s\n" (get-in acao ["stock"]) (get-in acao ["name"]))))
 
 (defn formata_lista_brapi [ data ]
   (map filtro_name data))
@@ -62,6 +62,7 @@
 
 (defn formata_acoes_brapi [ data ]
   (str "Nome: " (get-in data ["longName"])))
+
 (defn detalhar-acao-brapi [symbol]
   (-> (:body (http-client/get (str urlticket symbol)))
       (parse-string)
