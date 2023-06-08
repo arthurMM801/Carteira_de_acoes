@@ -47,16 +47,16 @@
   "https://brapi.dev/api/quote/")
 
 (defn filtro_name [acao]
-  (str (format "Symbol: %s Name: %s\n" (get-in acao ["stock"]) (get-in acao ["name"]))))
+  (str (format "Symbol: %s Name: %s" (get-in acao ["stock"]) (get-in acao ["name"]))))
 
 (defn formata_lista_brapi [ data ]
   (map filtro_name data))
 
 (defn obter-acoes-brapi []
-  (-> (:body (http-client/get urllista))
+  (mapv println  (-> (:body (http-client/get urllista))
       (parse-string)
       (get-in ["stocks"])
-      (formata_lista_brapi)))
+      (formata_lista_brapi))))
 
 
 (defn formata_acoes_brapi [ data ]
@@ -75,9 +75,14 @@
 (def listaTransacoesUrl "http://localhost:3000/aplicacoes")
 
 (defn formata_lista_aplicacoes [lista]
-  (map println (map #(format "Symbol: %s Name: %s\n" (get-in % ["stock"]) (get-in % ["name"])) lista)))
+ (mapv (fn [transacao]
+          (let [id (:acao transacao)
+                acao (:acao transacao)
+                valor (float (* (:cotacao transacao) (:quantidade transacao)))]
+            (str (format "id %s - Acao: %s - Valor: %.2f" id acao valor))))
+        lista))
+
 (defn get_aplicacoes []
-  (->
-    (:body (http-client/get listaTransacoesUrl))
-    (formata_lista_aplicacoes)
-    (prn)))
+    (mapv println (-> (:body (http-client/get listaTransacoesUrl))
+        (parse-string true)
+        (formata_lista_aplicacoes))))

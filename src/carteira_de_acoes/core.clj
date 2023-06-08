@@ -5,14 +5,14 @@
 
 ;(defn -main
 ;  [& args]
-;    (println  (cambista/obter-acoes-brapi)))
+;    (cambista/obter-acoes-brapi))
 
-(defn -main
-  [& args]
-  (let [{filtro :filtro} (interpretar-opcoes args)]
-    (println (formata-detalhes
-      (cambista/detalhar-acao-brapi filtro)
-      (cambista/obter-descricao filtro)))))
+;(defn -main
+;  [& args]
+;  (let [{filtro :filtro} (interpretar-opcoes args)]
+;    (println (formata-detalhes
+;      (cambista/detalhar-acao-brapi filtro)
+;      (cambista/obter-descricao filtro)))))
 
 (defn -main
   [& args]
