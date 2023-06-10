@@ -1,7 +1,4 @@
-(ns conversor.formatar
-  (:require [clojure.string :as str]))
-
-(defn split [x] (str/split x #"  "))
+(ns conversor.formatar)
 
 (defn extrai-Variacao [data]
   (- (get-in data ["regularMarketPreviousClose"]) (get-in data ["regularMarketOpen"])))
@@ -17,7 +14,7 @@
 
 (defn valida-descricao [descricao]
   (if (= descricao "{}")
-    "O ativo não tem descrição" descricao))
+    "O ativo nao tem descricao" descricao))
 
 (defn formata-detalhes [data-brapi descricao]
   (let [data (get data-brapi 0)]
@@ -36,3 +33,21 @@
       (float (get-in data ["regularMarketPreviousClose"]))
       (get-in data ["regularMarketTime"])
       ))))
+
+(defn filtro-name [acao]
+  (str (format "Symbol: %s Name: %s"
+               (get-in acao ["stock"])
+               (get-in acao ["name"]))))
+(defn formata-lista-brapi [ data ]
+  (map filtro-name data))
+
+(defn formata-saldo [saldo]
+  (format "Saldo %s" saldo))
+
+(defn formata-lista-aplicacoes [lista]
+  (println)
+  (mapv (fn [transacao]
+          (let [acao (:acao transacao)
+                valor (float (* (:cotacao transacao) (:quantidade transacao)))]
+            (str (format "Acao: %s - Valor: %.2f" acao valor))))
+        lista))
