@@ -86,3 +86,22 @@
     (mapv println (-> (:body (http-client/get listaTransacoesUrl))
         (parse-string true)
         (formata_lista_aplicacoes))))
+
+
+;; verifica saldo
+
+(def urlSaldo "http://localhost:3000/saldo")
+(defn get-saldo []
+  (format "Saldo: %.2f"
+          (->
+            (:body (http-client/get urlSaldo))
+            (parse-string true)
+            (get-in ["saldo"])
+            (float))))
+
+
+;; Listar transacoes
+
+(def urlAplicacoes "http://localhost:3000/aplicacoes")
+(defn get-aplicacoes []
+  (parse-string (:body (http-client/get urlAplicacoes))))
