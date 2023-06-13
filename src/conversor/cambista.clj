@@ -25,15 +25,23 @@
   "https://brapi.dev/api/quote/")
 
 (defn obter-acoes-brapi []
-  (mapv println  (-> (:body (http-client/get urllista))
+  (try
+    (mapv println  (-> (:body (http-client/get urllista))
       (parse-string)
       (get-in ["stocks"])
-      (formatar/formata-lista-brapi))))
+      (formatar/formata-lista-brapi)))
+  (catch Exception ex
+    (println "Ocorreu uma exceção ao obter a lista de ações:")
+    (println ex))))
 
 (defn detalhar-acao-brapi [symbol]
-  (-> (:body (http-client/get (str urlticket symbol)))
-      (parse-string)
-      (get-in ["results"])))
+  (try
+    (-> (:body (http-client/get (str urlticket symbol)))
+        (parse-string)
+        (get-in ["results"]))
+    (catch Exception ex
+      (println (str "Ocorreu uma exceção ao detalhar a ação " symbol ":"))
+      (println ex))))
 
 
 

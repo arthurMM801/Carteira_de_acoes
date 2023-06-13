@@ -17,6 +17,7 @@
     "O ativo nao tem descricao" descricao))
 
 (defn formata-detalhes [data-brapi descricao]
+  (try
   (let [data (get data-brapi 0)]
     (str (format
       "Nome: %s\nCodigo: %s\nTipo de ativo: %s\nDescricao: %s\nVariacao do dia: %.2f\nVariacao do dia em percentual: %.2f\nUltimo Preco: %f\nPreco Maximo: %f\nPreco Minimo: %f\nPreco de Abertura: %f\nPreco de fechamento: %f\nHora: %s"
@@ -32,7 +33,12 @@
       (float (get-in data ["regularMarketOpen"]))
       (float (get-in data ["regularMarketPreviousClose"]))
       (get-in data ["regularMarketTime"])
-      ))))
+      )))
+    (catch Exception ex
+      (println "Ocorreu uma excecao ao formatar os detalhes:")
+      (println ex)
+      (println "Ainda estamos trabalhando em uma soluçao"))))
+
 
 (defn filtro-name [acao]
   (str (format "Symbol: %s Name: %s"
